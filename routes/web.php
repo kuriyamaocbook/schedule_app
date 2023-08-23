@@ -27,4 +27,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/calendar',[ScheduleController::class, 'show']);
+Route::get('/calendar',[ScheduleController::class, 'show'])->name('show');
+Route::post('/calendar/create', [ScheduleController::class, 'create'])->name("create"); // 予定の新規追加
+Route::post('/calendar/get',  [ScheduleController::class, 'get'])->name("get"); // DBに登録した予定を取得
+Route::put('/calendar/update', [ScheduleController::class, 'update'])->name("update"); // 予定の更新
+Route::delete('/calendar/delete', [ScheduleController::class, 'delete'])->name("delete"); // 予定の削除

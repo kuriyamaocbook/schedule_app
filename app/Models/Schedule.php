@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Schedule extends Model
 {
     use HasFactory;
+    protected $fillable = ['event_title', 
+    'event_body', 
+    'start_date',
+    'end_date',
+    'event_color',
+    'event_border_color',];
 }
