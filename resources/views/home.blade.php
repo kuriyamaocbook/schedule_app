@@ -15,6 +15,8 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                     <a href="https://6ef1a6ae45f94c37b1e77b5847ada760.vfs.cloud9.us-east-1.amazonaws.com/calendar" class="button">カレンダー登録</a>
+                     <p>Your family role: {{ Auth::user()->family_role }}</p>
                 </div>
             </div>
         </div>

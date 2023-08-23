@@ -13,6 +13,7 @@
         <div id='calendar'></div>
          <!-- カレンダー新規追加モーダル -->
         <button type="button" onclick="openAddModal()">新規追加</button>
+       <a href="https://6ef1a6ae45f94c37b1e77b5847ada760.vfs.cloud9.us-east-1.amazonaws.com/home" class="button">ホームに戻る</a>
         <div id="modal-add" class="modal">
             <div class="modal-contents">
                 
