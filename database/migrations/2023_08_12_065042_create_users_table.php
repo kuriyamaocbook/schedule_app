@@ -5,11 +5,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAnotherUserTable extends Migration
+class CreateUsersTable extends Migration
 {
     public function up()
     {
-        Schema::create('another_users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
@@ -22,6 +22,6 @@ class CreateAnotherUserTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('another_users');
+        Schema::dropIfExists('users');
     }
 }
