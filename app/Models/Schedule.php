@@ -13,5 +13,14 @@ class Schedule extends Model
     'start_date',
     'end_date',
     'event_color',
-    'event_border_color',];
+    'event_border_color',
+    'user_id'
+    ];
+    
+     // ユーザーとの関連を定義
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
