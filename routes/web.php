@@ -5,6 +5,9 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\BrowseController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,3 +35,11 @@ Route::post('/calendar/create', [ScheduleController::class, 'create'])->name("cr
 Route::post('/calendar/get',  [ScheduleController::class, 'get'])->name("get"); // DBに登録した予定を取得
 Route::put('/calendar/update', [ScheduleController::class, 'update'])->name("update"); // 予定の更新
 Route::delete('/calendar/delete', [ScheduleController::class, 'delete'])->name("delete"); // 予定の削除
+
+// routes/web.php
+
+Route::get('/list', [UsersController::class, 'index'])->name('users.index');
+Route::post('/batch-update', [UsersController::class, 'batchUpdate'])->name('users.batchUpdate');
+Route::post('/calendars/show-selected', [BrowseController::class, 'showSelectedCalendars'])->name('calendars.showSelected');
+Route::get('/calendars/{userId}', [UsersController::class, 'showUserCalendar'])->name('calendars.show');
+Route::post('calendars/showSelected', [BrowseController::class, 'showSelectedCalendars'])->name('showSelectedCalendars');

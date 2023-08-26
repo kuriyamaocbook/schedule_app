@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id'); // ユーザーとの関連付けに使用する外部キー
             $table->string('event_title')->comment('イベント名');
             $table->string('event_body')->nullable()->comment('イベント内容');
             $table->date('start_date')->comment('開始日');
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->string('event_color')->comment('背景色');
             $table->string('event_border_color')->comment('枠線色');
             $table->timestamps();
-           
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
