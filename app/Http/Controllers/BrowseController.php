@@ -20,7 +20,8 @@ class BrowseController extends Controller
 
         foreach ($selectedUsers as $user) {
             $userSchedules = Schedule::where('user_id', $user->id)->get();
-            $allUserSchedules = array_merge($allUserSchedules, $userSchedules);
+            $array=$userSchedules->toArray();
+            $allUserSchedules = array_merge($allUserSchedules, $array);
         }
 
         // カレンダー表示ビューにデータを渡して表示

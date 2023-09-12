@@ -8,6 +8,12 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules;
+use Illuminate\View\View;
 
 class RegisterController extends Controller
 {
@@ -54,22 +60,46 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'family_role' => ['nullable', 'string', 'max:255'], // 家族の役割のバリデーションルールを追加
+            //'share_code' => ['required', 'string', 'max:255'],
         ]);
     }
-
+        
     /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+   protected function create(array $data)
+   
+{
+ 
+  
+
+    $user = User::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => Hash::make($data['password']),
+        'family_role' => $data['family_role'], // 家族の役割を追加
+        //'family_id' => $data['family_id'], // family_id を設定
+    ]);
+
+    event(new Registered($user));
+
+    Auth::login($user);
+
+    return redirect(RouteServiceProvider::HOME);
+}
+
+    
+     public static function generateUniqueFamilyId()
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'family_role' => $data['family_role'], // 家族の役割を追加
-        ]);
+          return (string) \Illuminate\Support\Str::uuid();
     }
+
+    public function showRegistrationForm()
+    {
+        return view('auth.register');
+    }
+
 }

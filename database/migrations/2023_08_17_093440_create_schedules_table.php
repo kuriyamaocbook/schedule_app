@@ -15,15 +15,19 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // ユーザーとの関連付けに使用する外部キー
             $table->string('event_title')->comment('イベント名');
             $table->string('event_body')->nullable()->comment('イベント内容');
             $table->date('start_date')->comment('開始日');
             $table->date('end_date')->comment('終了日');
             $table->string('event_color')->comment('背景色');
             $table->string('event_border_color')->comment('枠線色');
+            $table->integer('resourceId')->nullable();
+            $table->string('building')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('user_id')->constraind();
+            $table->unsignedBigInteger('family_id')->nullable(); // あるいは必要に応じてデータ型を変更
+            $table->foreign('family_id')->references('id')->on('users'); // 'families' テーブルとの外部キー制約
+
         });
     }
 

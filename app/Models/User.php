@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Schedule;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -35,6 +36,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Schedule::class, 'user_id');
     }
-
-  
+    public static function generateUniqueFamilyId()
+    {
+        // ユニークな family_id を生成するロジックをここに記述します
+        return Str::uuid()->toString(); // 例として UUID を使用
+    }
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
+    }
+    public function groups()
+{
+    return $this->belongsToMany(Group::class);
+} // ユーザーとグループの多対多の関係を定義
 }

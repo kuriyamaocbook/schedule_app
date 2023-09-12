@@ -3,7 +3,6 @@ import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from '@fullcalendar/timegrid';
 
-
 function formatDate(date, pos) {
     var dt = new Date(date);
     if(pos==="end"){
@@ -15,72 +14,72 @@ function formatDate(date, pos) {
 // カレンダーを表示させたいタグのidを取得
 var calendarEl = document.getElementById("calendar");
 
-// new Calender(カレンダーを表示させたいタグのid, {各種カレンダーの設定});
-let calendar = new Calendar(calendarEl, {
-    // プラグインの導入(import忘れずに)
-    plugins: [dayGridPlugin, timeGridPlugin],
+// カレンダーの設定
 
-    // カレンダー表示
-    initialView: "dayGridMonth", // 最初に表示させるページの形式
-    customButtons: { // カスタムボタン
-        eventAddButton: { // 新規予定追加ボタン
+let calendar = new Calendar(calendarEl, {
+    plugins: [dayGridPlugin, timeGridPlugin],
+    initialView: "dayGridMonth",
+    customButtons: {
+        eventAddButton: {
             text: '予定を追加',
             click: function() {
-                // 初期化（以前入力した値をクリアする）
-                document.getElementById("new-id").value = "";
-                document.getElementById("new-event_title").value = "";
-                document.getElementById("new-start_date").value = "";
-                document.getElementById("new-end_date").value = "";
-                document.getElementById("new-event_body").value = "";
-                document.getElementById("new-event_color").value = "blue";
-
-                // 新規予定追加モーダルを開く
-                document.getElementById('modal-add').style.display = 'flex';
+                // 初期化
+                // ...
             }
         }
     },
-    headerToolbar: { // ヘッダーの設定
-        // コンマのみで区切るとページ表示時に間が空かず、半角スペースで区切ると間が空く（半角があるかないかで表示が変わることに注意）
-        start: "prev,next today", // ヘッダー左（前月、次月、今日の順番で左から配置）
-        center: "title", // ヘッダー中央（今表示している月、年）
-        end: "dayGridMonth,timeGridWeek", // ヘッダー右（月形式、時間形式）
+    headerToolbar: {
+        start: "prev,next today",
+        center: "title",
+        end: "dayGridMonth,timeGridWeek",
     },
-    height: "auto", // 高さをウィンドウサイズに揃える
-    // DBに登録した予定を表示する
-    events: function (info, successCallback, failureCallback) { // eventsはページが切り替わるたびに実行される
-        // axiosでLaravelの予定取得処理を呼び出す
+    height: "auto",
+    events: function (info, successCallback, failureCallback) {
         axios
             .post("/calendar/get", {
-                // 現在カレンダーが表示している日付の期間(1月ならば、start_date=1月1日、end_date=1月31日となる)
                 start_date: info.start.valueOf(),
                 end_date: info.end.valueOf(),
             })
             .then((response) => {
-                // 既に表示されているイベントを削除（重複防止）
-                calendar.removeAllEvents(); // ver.6でもどうやら使える（ドキュメントにはない？）
-                // カレンダーに読み込み
-                successCallback(response.data); // successCallbackに予定をオブジェクト型で入れるとカレンダーに表示できる
+                calendar.removeAllEvents();
+                successCallback(response.data);
             })
             .catch((error) => {
-                // バリデーションエラーなど
                 alert("登録に失敗しました。");
             });
-         },
-          eventClick: function(info) {
-        // console.log(info.event); // info.event内に予定の全情報が入っているので、必要に応じて参照すること
-        document.getElementById("id").value = info.event.id;
-        document.getElementById("delete-id").value = info.event.id; // ここを追記
-        document.getElementById("event_title").value = info.event.title;
-        document.getElementById("start_date").value = formatDate(info.event.start);
-        document.getElementById("end_date").value = formatDate(info.event.end, "end");
-        document.getElementById("event_body").value = info.event.extendedProps.description;
-        document.getElementById("event_color").value = info.event.backgroundColor;
-
-        // 予定編集モーダルを開く
-        document.getElementById('modal-update').style.display = 'flex';
+    },
+    eventClick: function(info) {
+        // ...
+    },
+    
+    // 新たに追加する設定オプション
+    datesAboveResources: true,
+    views: {
+        resourceTimeGridOneDay: {
+            type: 'resourceTimeGrid',
+            duration: { days: 1 },
+            buttonText: '1日'
+        },
+        // 他のビューの設定を追加
+        resourceTimelineDayGroup: {
+            type: 'resourceTimelineDay',
+            resourceGroupField: 'building',
+            buttonText: 'グループ'
+        },
+    },
+    resources: function (info, successCallback, failureCallback) {
+        axios
+            .post("resourceGet", {
+                // リソース取得のパラメータ
+            })
+            .then((response) => {
+                successCallback(response.data);
+            })
+            .catch((error) => {
+                alert("リソースの取得に失敗しました。");
+            });
     },
 });
-
 
 // カレンダーのレンダリング
 calendar.render();
@@ -96,5 +95,5 @@ window.deleteEvent = function(){
 
     if (confirm('削除すると復元できません。\n本当に削除しますか？')) {
         document.getElementById('delete-form').submit();
-    }
+    } 
 };
